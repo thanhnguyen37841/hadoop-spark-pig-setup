@@ -1,224 +1,103 @@
-# 🚀 Hadoop - Spark - Pig Cluster Setup & Data Processing
+🚀 Hadoop - Spark - Pig: End-to-End Big Data Pipeline
 
-## 📌 Giới thiệu
+📌 Tổng quan 
 
-Triển khai và vận hành hệ thống **Big Data phân tán** sử dụng:
+Tập trung vào việc thiết kế và triển khai một cụm tính toán phân tán (Distributed Cluster) hoàn chỉnh. Mục tiêu là giải quyết bài toán xử lý dữ liệu hàng không (Airline Delay) quy mô lớn, từ khâu lưu trữ thô đến khi trích xuất thông tin có giá trị (Insights).
 
-* Apache Hadoop (HDFS, YARN)
-* Apache Spark
-* Apache Pig
+🏗️ Kiến trúc hệ thống & Stack kỹ thuật
+* Cluster Topology: 01 Master Node & 02 Slave Nodes (Virtualization environment).
+* Storage Layer: HDFS với cấu hình Replication Factor phù hợp để đảm bảo an toàn dữ liệu.
+* Resource Management: YARN điều phối tài nguyên động giữa Spark và Pig.
+* Processing Engine: * PySpark: Xử lý tính toán phân tán hiệu năng cao.
+* Pig Latin: Xây dựng các luồng ETL (Extract - Transform - Load) tối ưu.
 
-Hệ thống được xây dựng trên môi trường **Ubuntu (Linux)** với mô hình **Cluster (Master - Slave)** nhằm:
+<details>
+ <summary><b>🛠️ Nhấn vào đây để xem chi tiết các bước triển khai </b></summary>
+⚙️ Quy trình triển khai chi tiết (8 Bước)
+1. Chuẩn bị môi trường (Prerequisites)
 
-* Lưu trữ dữ liệu lớn (HDFS)
-* Xử lý dữ liệu phân tán (Spark, Pig)
-* Phân tích và trực quan hóa dữ liệu
+* Cài đặt các gói hỗ trợ kết nối: SSH, pdsh.
 
----
+* Thiết lập an ninh: Tạo SSH key và cấu hình đăng nhập không mật khẩu (passwordless) giữa các node.
 
-## 🏗️ Kiến trúc hệ thống
+* Kiểm tra các nền tảng cơ bản: Đảm bảo Java và Python đã được cài đặt và hoạt động đúng.
 
-* **Master Node**
+2. Cài đặt Hadoop
 
-  * NameNode (HDFS)
-  * ResourceManager (YARN)
-  * Spark Master
+* Giải nén gói cài đặt Apache Hadoop.
 
-* **Slave Nodes**
+* Khai báo môi trường: Cấu hình biến JAVA_HOME để Hadoop nhận diện môi trường thực thi.
 
-  * DataNode
-  * NodeManager
-  * Spark Worker
+* Thiết lập cấu trúc: Định nghĩa các thư mục làm việc hệ thống.
 
----
+3. Thiết lập Cluster & Network
 
-## 🛠️ Công nghệ sử dụng
+* Phân giải tên miền cục bộ: Cấu hình file /etc/hosts để các máy nhận diện nhau qua IP/Hostname.
 
-* Linux (Ubuntu)
-* SSH (Passwordless)
-* Apache Hadoop (HDFS, YARN)
-* Apache Spark
-* Apache Pig (Pig Latin)
-* Python (Visualization)
+* Đặt định danh: Thiết lập hostname riêng biệt cho Master và các Slave node.
 
----
+* Kết nối mạng nội bộ: Phân phối SSH public key từ Master đến tất cả các Slave.
 
-## 📂 Cấu trúc thư mục
+4. Cấu hình các thành phần Hadoop
 
-```bash
-hadoop-spark-pig-setup/
-└── screenshots/
-    ├── 01-prerequisites/
-    ├── 02-hadoop-installation/
-    ├── 03-cluster-network-setup/
-    ├── 04-hadoop-configuration/
-    ├── 05-hdfs-setup/
-    ├── 06-yarn-setup/
-    ├── 07-spark/
-    └── 08-pig/
-```
+* Tùy chỉnh các tệp cấu hình lõi: Chỉnh sửa core-site.xml (định nghĩa hệ thống file) và hdfs-site.xml (cấu hình lưu trữ).
 
----
+* Quản lý nhân sự: Cập nhật file workers để liệt kê danh sách các node thực thi.
 
-## ⚙️ 1. Chuẩn bị môi trường (Prerequisites)
+* Đồng bộ hóa: Sao chép toàn bộ cấu hình từ Master sang các Slave để đảm bảo tính nhất quán.
 
-* Cài đặt SSH, pdsh
-* Tạo SSH key và cấu hình passwordless
-* Kiểm tra Java & Python
+5. HDFS (Storage Layer)
 
-📸 Ví dụ:
+* Khởi tạo: Thực hiện format NameNode lần đầu tiên để thiết lập cấu trúc HDFS.
 
-* SSH setup
-* Authorized keys
-* Java verification
+* Vận hành: Khởi động dịch vụ Distributed File System (DFS).
 
----
+* Giám sát: Kiểm tra trạng thái lưu trữ thông qua Web UI tại cổng 9870.
 
-## 🧱 2. Cài đặt Hadoop
+6. YARN (Resource Management)
 
-* Giải nén Hadoop
-* Cấu hình `JAVA_HOME`
-* Thiết lập thư mục làm việc
+* Cấu hình tài nguyên: Thiết lập các thông số trong yarn-site.xml.
 
----
+* Khởi động bộ điều phối: Chạy dịch vụ YARN để quản lý tài nguyên tính toán của cụm.
 
-## 🌐 3. Thiết lập Cluster & Network
+* Quản lý tập trung: Theo dõi các ứng dụng và tài nguyên qua cổng 8088.
 
-* Cấu hình `/etc/hosts`
-* Đặt hostname cho các node
-* Phân phối SSH key giữa các node
+7. Apache Spark (Distributed Processing)
 
----
+* Thiết lập môi trường chạy: Cấu hình file .bashrc và các tham số Spark.
 
-## ⚙️ 4. Cấu hình Hadoop
+* Kích hoạt cụm: Khởi động Spark Master và các Spark Worker trên từng node.
 
-* `core-site.xml`
-* `hdfs-site.xml`
-* `workers`
-* Đồng bộ cấu hình từ master → slaves
+* Thực thi: Sử dụng lệnh spark-submit để đẩy các job tính toán (như WordCount) lên cụm.
 
----
+8. Apache Pig (Data Processing & ETL)
 
-## 💾 5. HDFS (Storage Layer)
+* Lựa chọn chế độ: Chạy ở Local Mode (thử nghiệm) hoặc MapReduce Mode (trên Cluster).
 
-* Format HDFS
-* Khởi động DFS
-* Truy cập Web UI (port 9870)
+* Xử lý dữ liệu: Viết script Pig Latin để thực hiện ETL (Lọc, nhóm, tính toán thống kê delay).
 
-📸 Demo:
+* Trực quan hóa: Xuất kết quả từ HDFS và sử dụng Python để vẽ biểu đồ phân tích (hãng bay, thời gian delay).
+</details>
+⚡ Điểm nhấn kỹ thuật (Key Highlights)
+* Cấu hình Cluster thực tế: Không chạy Standalone, dự án mô phỏng môi trường thực tế với kết nối SSH Passwordless và quản lý Node qua cấu hình workers.
 
-* HDFS Web UI
+* ETL Pipeline chuyên sâu: * Lọc và làm sạch dữ liệu nhiễu từ bộ dữ liệu hàng không.
+Phân tích xu hướng delay theo hãng bay (Carriers) và thời gian (Monthly).
 
----
+* Visualization: Tích hợp Python để chuyển đổi kết quả từ HDFS thành biểu đồ trực quan, giúp đưa ra quyết định kinh doanh.
 
-## ⚡ 6. YARN (Resource Management)
+🛠️ Hướng dẫn triển khai nhanh (Quick Start)
+* Start Services: start-dfs.sh && start-yarn.sh
+* Submit Spark Job:
+spark-submit --master yarn ./src/wordcount.py
+* Run Pig Script:
+pig -x mapreduce ./scripts/flight_analysis.pig
 
-* Cấu hình `yarn-site.xml`
-* Khởi động YARN
-* Kiểm tra Resource Manager (port 8088)
+📊 Kết quả đạt được
+* Vận hành ổn định cụm Multi-node với đầy đủ các Web UI giám sát.
+* Xử lý thành công tập dữ liệu hàng không, tìm ra các "điểm nghẽn" gây delay chuyến bay.
+* Thành thạo kỹ năng Linux System Admin và Big Data Troubleshooting.
 
-📸 Demo:
+👤 Tác giả
 
-* YARN UI
-
----
-
-## 🔥 7. Apache Spark (Distributed Processing)
-
-### ✔ Thiết lập
-
-* Kiểm tra cài đặt Spark
-* Cấu hình `bashrc`
-* Khởi động Spark Master & Workers
-
-### ✔ Kiểm tra
-
-* Spark Master UI (port 8080)
-* Worker UI (port 8081)
-
-### ✔ Thực thi job
-
-* Tạo dữ liệu input
-* Viết chương trình WordCount (Python)
-* Chạy bằng `spark-submit`
-* Kiểm tra trạng thái job
-
-📸 Demo:
-
-* Spark UI
-* Job execution
-
----
-
-## 🐘 8. Apache Pig (Data Processing & ETL)
-
-### ✔ Chế độ chạy
-
-* Local Mode
-* MapReduce Mode
-
-### ✔ Xử lý dữ liệu
-
-* Viết script Pig Latin:
-
-  * Lọc dữ liệu
-  * Nhóm dữ liệu
-  * Phân tích delay
-
-### ✔ Bài toán thực tế
-
-* Tháng có delay thấp nhất / cao nhất
-* Top hãng bay ít delay nhất
-* Sân bay có delay cao
-
-### ✔ Visualization
-
-* Xuất dữ liệu từ HDFS
-* Dùng Python vẽ biểu đồ:
-
-  * Top carriers
-  * Monthly delay rate
-
-📸 Demo:
-
-* Pig script
-* Output HDFS
-* Biểu đồ phân tích
-
----
-
-## 📊 Kết quả đạt được
-
-* Triển khai thành công hệ thống Big Data phân tán
-* Xử lý dữ liệu lớn bằng Spark & Pig
-* Xây dựng pipeline:
-
-  > Data → Processing → Analysis → Visualization
-* Hiểu rõ:
-
-  * HDFS (storage)
-  * YARN (resource)
-  * Spark / Pig (processing)
-
----
-
-## 🎯 Kỹ năng đạt được
-
-* Linux system administration
-* Distributed system setup
-* Data processing (Spark, Pig)
-* ETL pipeline
-* Data analysis & visualization
-* Debug & vận hành cluster
-
----
-
-## 📌 Ghi chú
-
-* Dự án mang tính **lab + thực hành triển khai thực tế**
-* Tập trung vào:
-
-  * Setup hệ thống
-  * Xử lý dữ liệu
-  * Hiểu pipeline Big Data
-
+**Nguyễn Chí Thành** - Công nghệ thông tin (Khóa 14) - Trường Đại học Công Thương TPHCM (HUIT)

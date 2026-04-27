@@ -3,6 +3,9 @@
 ## 📌 Tổng quan
 Tập trung vào việc thiết kế và triển khai một **cụm tính toán phân tán (Distributed Cluster)** hoàn chỉnh. Mục tiêu là giải quyết bài toán xử lý dữ liệu hàng không (Airline Delay) quy mô lớn, từ khâu lưu trữ thô đến khi trích xuất thông tin có giá trị (Insights).
 
+## 🔄 Data Pipeline
+Raw Data → HDFS → Pig ETL → Aggregated Output → Python Visualization → Insights
+
 ## 🏗️ Kiến trúc hệ thống & Stack kỹ thuật
 * **Cluster Topology:** 01 Master Node & 02 Slave Nodes (Virtualization environment).
 * **Storage Layer:** HDFS với cấu hình Replication Factor phù hợp để đảm bảo an toàn dữ liệu.

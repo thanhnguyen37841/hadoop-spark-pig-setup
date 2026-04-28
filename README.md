@@ -94,7 +94,7 @@ spark-submit --master yarn ./spark/wordcount.py
 
 * **Run Pig Script:**
 ```bash
-pig -x mapreduce ./pig/top5_carriers.pig
+pig -x mapreduce ./pig/top5_arrdelay.pig
 pig -x mapreduce ./pig/monthly_delay_rate.pig
 ```
 

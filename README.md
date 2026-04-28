@@ -4,14 +4,21 @@
 Tập trung vào việc thiết kế và triển khai một **cụm tính toán phân tán (Distributed Cluster)** hoàn chỉnh. Mục tiêu là giải quyết bài toán xử lý dữ liệu hàng không (Airline Delay) quy mô lớn, từ khâu lưu trữ thô đến khi trích xuất thông tin có giá trị (Insights).
 
 ## 🔄 Data Pipeline
-Raw Data → HDFS → Pig ETL → Aggregated Output → Python Visualization → Insights
+Raw Data → HDFS → Pig ETL → Aggregated Output 
+          ↘
+           Spark ML (Amazon Metadata Classification)
+                    ↓
+          Model Evaluation → Insights
 
 ## 🏗️ Kiến trúc hệ thống & Stack kỹ thuật
 * **Cluster Topology:** 01 Master Node & 02 Slave Nodes (Virtualization environment).
 * **Storage Layer:** HDFS với cấu hình Replication Factor phù hợp để đảm bảo an toàn dữ liệu.
 * **Resource Management:** YARN điều phối tài nguyên động giữa Spark và Pig.
-* **Processing Engine:** * **PySpark:** Xử lý tính toán phân tán hiệu năng cao.
-  * **Pig Latin:** Xây dựng các luồng ETL (Extract - Transform - Load) tối ưu.
+* **Processing Engine:** 
+  * **PySpark:** 
+    * Xử lý tính toán phân tán (WordCount, Data Processing)
+    * Xây dựng mô hình Machine Learning với Spark MLlib (Amazon Metadata Classification)
+  * **Pig Latin:** Xây dựng các luồng ETL (Extract - Transform - Load)
 
 <details>
 <summary><b>🛠️ Nhấn vào đây để xem chi tiết các bước triển khai</b></summary>
@@ -60,12 +67,25 @@ Raw Data → HDFS → Pig ETL → Aggregated Output → Python Visualization →
 
 </details>
 
+## 🤖 Machine Learning with Spark MLlib
 
+Machine Learning sử dụng Spark MLlib trên dataset Amazon Metadata.
+
+- Feature: price, salesRank, brand
+- Pipeline: StringIndexer → VectorAssembler → Train/Test Split
+- Models:
+  - Decision Tree
+  - Random Forest
+  - Logistic Regression
+  - Gradient Boosted Tree
+- Evaluation: Accuracy comparison giữa các mô hình
+  
 ## ⚡ Điểm nhấn kỹ thuật (Key Highlights)
 * **Cấu hình Cluster thực tế:** Không chạy Standalone, dự án mô phỏng môi trường thực tế với kết nối SSH Passwordless và quản lý Node qua cấu hình `workers`.
 * **ETL Pipeline chuyên sâu:**  Lọc và làm sạch dữ liệu nhiễu từ bộ dữ liệu hàng không.
   * Phân tích xu hướng delay theo hãng bay (Carriers) và thời gian (Monthly).
 * **Visualization:** Tích hợp Python để chuyển đổi kết quả từ HDFS thành biểu đồ trực quan, giúp đưa ra quyết định kinh doanh.
+* **Machine Learning Pipeline:** Huấn luyện và so sánh nhiều mô hình bằng Spark MLlib trên dữ liệu Amazon.
 
 ## 🛠️ Hướng dẫn triển khai nhanh (Quick Start)
 * **Start Services:** start-dfs.sh && start-yarn.sh
@@ -73,6 +93,8 @@ Raw Data → HDFS → Pig ETL → Aggregated Output → Python Visualization →
 spark-submit --master yarn ./src/wordcount.py
 * **Run Pig Script:**
 pig -x mapreduce ./scripts/flight_analysis.pig
+* **Run Spark ML Job:**
+spark-submit --master spark://<master-ip>:7077 ./spark/amazon_ml_analysis.py
 
 ## 📊 Kết quả đạt được
 * Vận hành ổn định cụm Multi-node với đầy đủ các Web UI giám sát.

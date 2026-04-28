@@ -4,11 +4,9 @@
 Tập trung vào việc thiết kế và triển khai một **cụm tính toán phân tán (Distributed Cluster)** hoàn chỉnh. Mục tiêu là giải quyết bài toán xử lý dữ liệu hàng không (Airline Delay) quy mô lớn, từ khâu lưu trữ thô đến khi trích xuất thông tin có giá trị (Insights).
 
 ## 🔄 Data Pipeline
-Raw Data → HDFS → Pig ETL → Aggregated Output 
-          ↘
-           Spark ML (Amazon Metadata Classification)
-                    ↓
-          Model Evaluation → Insights
+Airline Data → HDFS → Pig ETL → Aggregated Output → Visualization → Insights
+
+Amazon Metadata → Spark MLlib → Model Evaluation → Insights
 
 ## 🏗️ Kiến trúc hệ thống & Stack kỹ thuật
 * **Cluster Topology:** 01 Master Node & 02 Slave Nodes (Virtualization environment).
@@ -73,11 +71,7 @@ Machine Learning sử dụng Spark MLlib trên dataset Amazon Metadata.
 
 - Feature: price, salesRank, brand
 - Pipeline: StringIndexer → VectorAssembler → Train/Test Split
-- Models:
-  - Decision Tree
-  - Random Forest
-  - Logistic Regression
-  - Gradient Boosted Tree
+- Models: Decision Tree, Random Forest, Logistic Regression, Gradient Boosted Tree
 - Evaluation: Accuracy comparison giữa các mô hình
   
 ## ⚡ Điểm nhấn kỹ thuật (Key Highlights)
@@ -90,7 +84,7 @@ Machine Learning sử dụng Spark MLlib trên dataset Amazon Metadata.
 ## 🛠️ Hướng dẫn triển khai nhanh (Quick Start)
 * **Start Services:** start-dfs.sh && start-yarn.sh
 * **Submit Spark Job:**
-spark-submit --master yarn ./src/wordcount.py
+spark-submit --master yarn ./spark/wordcount.py
 * **Run Pig Script:**
 pig -x mapreduce ./scripts/flight_analysis.pig
 * **Run Spark ML Job:**
@@ -99,8 +93,9 @@ spark-submit --master spark://<master-ip>:7077 ./spark/amazon_ml_analysis.py
 ## 📊 Kết quả đạt được
 * Vận hành ổn định cụm Multi-node với đầy đủ các Web UI giám sát.
 * Xử lý thành công tập dữ liệu hàng không, tìm ra các "điểm nghẽn" gây delay chuyến bay.
-* Thành thạo kỹ năng Linux System Admin và Big Data Troubleshooting.
-
+* Xây dựng nền tảng kiến thức về Linux System Administration và Big Data Troubleshooting.
+* Xây dựng và đánh giá mô hình Machine Learning phân tán với Spark MLlib trên dataset Amazon.
+  
 ## 👤 Tác giả
 
 **Nguyễn Chí Thành** - Công nghệ thông tin (Khóa 14) - Trường Đại học Công Thương TPHCM (HUIT)

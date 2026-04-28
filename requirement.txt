@@ -1,0 +1,23 @@
+# BIG DATA & DISTRIBUTED COMPUTING FRAMEWORK
+# ==========================================
+pyspark==3.5.3
+findspark>=2.0.1
+pyarrow>=10.0.0      
+
+# ==========================================
+# DATA ANALYSIS & MANIPULATION
+# ==========================================
+pandas>=1.5.0
+numpy>=1.21.0
+
+# ==========================================
+# DATA VISUALIZATION
+# ==========================================
+matplotlib>=3.5.0
+seaborn>=0.11.2
+
+# ==========================================
+# INTERACTIVE DEVELOPMENT ENVIRONMENT
+# ==========================================
+jupyter>=1.0.0
+notebook>=6.4.0

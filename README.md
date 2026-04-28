@@ -67,7 +67,7 @@ Amazon Metadata → Spark MLlib → Model Evaluation → Insights
 
 ## 🤖 Machine Learning with Spark MLlib
 
-Machine Learning sử dụng Spark MLlib trên dataset Amazon Metadata.
+Triển khai Machine Learning với Spark MLlib trên dataset Amazon Metadata.
 
 - Feature: price, salesRank, brand
 - Pipeline: StringIndexer → VectorAssembler → Train/Test Split

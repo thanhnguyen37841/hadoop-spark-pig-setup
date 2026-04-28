@@ -94,7 +94,8 @@ spark-submit --master yarn ./spark/wordcount.py
 
 * **Run Pig Script:**
 ```bash
-pig -x mapreduce ./scripts/flight_analysis.pig
+pig -x mapreduce ./pig/top5_carriers.pig
+pig -x mapreduce ./pig/monthly_delay_rate.pig
 ```
 
 * **Run Spark ML Job:**

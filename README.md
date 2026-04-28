@@ -82,13 +82,26 @@ Machine Learning sử dụng Spark MLlib trên dataset Amazon Metadata.
 * **Machine Learning Pipeline:** Huấn luyện và so sánh nhiều mô hình bằng Spark MLlib trên dữ liệu Amazon.
 
 ## 🛠️ Hướng dẫn triển khai nhanh (Quick Start)
-* **Start Services:** start-dfs.sh && start-yarn.sh
+* **Start Services:**
+```bash
+start-dfs.sh && start-yarn.sh
+```
+
 * **Submit Spark Job:**
+```bash
 spark-submit --master yarn ./spark/wordcount.py
+```
+
 * **Run Pig Script:**
+```bash
 pig -x mapreduce ./scripts/flight_analysis.pig
+```
+
 * **Run Spark ML Job:**
+```bash
 spark-submit --master spark://<master-ip>:7077 ./spark/amazon_ml_analysis.py
+```
+
 
 ## 📊 Kết quả đạt được
 * Vận hành ổn định cụm Multi-node với đầy đủ các Web UI giám sát.
